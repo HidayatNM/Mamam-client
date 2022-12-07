@@ -16,7 +16,7 @@ export default {
     ...mapState(useMamamStore, ['data'])
   },
   methods: {
-    ...mapActions(useMamamStore, ['fetchData'])
+    ...mapActions(useMamamStore, ['fetchData', 'deleteMenu'])
   },
   created() {
     this.fetchData()
@@ -56,7 +56,7 @@ export default {
                       <PencilSquareIcon class="h-5 w-5 text-blue-600" data-modal-toggle="authentication-modal" />
                     </a>
                     <a href="">
-                      <TrashIcon class="h-5 w-5 text-red-600" />
+                      <TrashIcon class="h-5 w-5 text-red-600" @click.prevent="deleteMenu(menu.id)" />
                     </a>
                   </div>
                 </div>

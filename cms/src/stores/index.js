@@ -81,5 +81,21 @@ export const useMamamStore = defineStore("Mamam", {
         console.log(err);
       }
     },
+
+    async deleteMenu(id) {
+      console.log(id);
+      try {
+        const { data } = await axios({
+          url: `${baseUrl}/menus/${id}`,
+          method: "DELETE",
+          headers: {
+            access_token: localStorage.getItem("access_token"),
+          },
+        });
+        this.router.push("/dashboard");
+      } catch (err) {
+        console.log(err);
+      }
+    },
   },
 });
