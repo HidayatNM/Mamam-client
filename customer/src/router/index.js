@@ -1,13 +1,19 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
+import Merchant from "../views/Merchant.vue";
+import Menus from "../views/MenusView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: "/",
-      name: "Home",
-      component: HomeView,
+      path: "/:merchant",
+      name: "Merchant",
+      component: Merchant,
+    },
+    {
+      path: "/:merchant/menu-list",
+      name: "Menus",
+      component: Menus,
     },
   ],
 });
