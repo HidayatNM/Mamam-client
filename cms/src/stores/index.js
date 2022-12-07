@@ -6,6 +6,7 @@ export const useMamamStore = defineStore("Mamam", {
   state: () => {
     return {
       isLogin: false,
+      data: [],
     };
   },
   actions: {
@@ -62,6 +63,20 @@ export const useMamamStore = defineStore("Mamam", {
           },
         });
         this.router.push("/login");
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    async fetchData() {
+      try {
+        const { data } = await axios({
+          url: `${baseUrl}/menus`,
+          method: "GET",
+          headers: {
+            access_token: localStorage.getItem("access_token"),
+          },
+        });
+        this.data = data.data;
       } catch (err) {
         console.log(err);
       }
