@@ -14,20 +14,37 @@ export default {
   },
   data() {
     return {
-      isOpen: ''
+      isOpen: ref(false),
+      menu: {
+        id: '',
+        name: '',
+        description: '',
+        price: '',
+        imgUrl: ''
+      }
     }
   },
   computed: {
-    ...mapState(useMamamStore, ['data'])
+    ...mapState(useMamamStore, ['data', 'dataEditMenu'])
   },
   methods: {
-    ...mapActions(useMamamStore, ['fetchData', 'deleteMenu']),
+    ...mapActions(useMamamStore, ['fetchData', 'deleteMenu', 'getEditMenu', 'editMenu']),
     closeModal() {
       this.isOpen = ref(false)
     },
-    openModal() {
+    openModal(id) {
       this.isOpen = ref(true)
+      this.getEditMenu(id)
+      this.menu.id = this.dataEditMenu.id
+      this.menu.name = this.dataEditMenu.name
+      this.menu.description = this.dataEditMenu.description
+      this.menu.price = this.dataEditMenu.price
+      this.menu.imgUrl = this.dataEditMenu.imgUrl
+    },
+    submitEdit() {
+      this.editMenu(this.menu)
     }
+
   },
   created() {
     this.fetchData()
@@ -63,7 +80,7 @@ export default {
                 <div class="flex justify-between mt-4">
                   <p class="font-bold">Rp. {{ menu.price.toLocaleString() }}</p>
                   <div class="flex gap-2">
-                    <a href="" data-modal-toggle="authentication-modal" @click.prevent="openModal(el.id)">
+                    <a href="" data-modal-toggle="authentication-modal" @click.prevent="openModal(menu.id)">
                       <PencilSquareIcon class="h-5 w-5 text-blue-600" data-modal-toggle="authentication-modal" />
                     </a>
                     <a href="">
@@ -98,38 +115,38 @@ export default {
             leave-to="opacity-0 scale-95">
             <DialogPanel
               class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-              <form class="space-y-6" action="#">
+              <!-- <pre>{{ dataEditMenu }}</pre> -->
+              <form class="space-y-6" action="#" @submit.prevent="submitEdit()">
                 <h5 class="text-xl font-medium text-gray-900 dark:text-white">Edit Menu</h5>
                 <div>
                   <label for="menu-name"
                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
                   <input type="text" name="menu-name" id="menu-name"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                    required>
+                    v-model="menu.name" required>
                 </div>
                 <div>
                   <label for="menu-description"
                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
                   <input type="text" name="menu-description" id="menu-description"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                    required>
+                    v-model="menu.description" required>
                 </div>
                 <div>
                   <label for="price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Price</label>
                   <input type="text" name="price" id="price"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                    required>
+                    v-model="menu.price" required>
                 </div>
                 <div>
                   <label for="manu-imgUrl" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Image
                     Url</label>
                   <input type="text" name="menu-imgUrl" id="menu-imgUrl"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                    required>
+                    v-model="menu.imgUrl" required>
                 </div>
                 <button type="submit"
-                  class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                  @click.prevent="closeModal">Submit</button>
+                  class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
               </form>
             </DialogPanel>
           </TransitionChild>
