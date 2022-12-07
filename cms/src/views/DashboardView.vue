@@ -1,22 +1,33 @@
 <script>
-import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
+import { Disclosure, DisclosureButton, DisclosurePanel, TransitionRoot, TransitionChild, Dialog, DialogPanel, DialogTitle } from '@headlessui/vue'
+import { ref } from 'vue'
 import { ChevronUpIcon, PencilSquareIcon, TrashIcon } from '@heroicons/vue/20/solid'
 import { mapActions, mapState } from 'pinia';
 import { useMamamStore } from '../stores';
 
+// const isOpen = ref(true)
+
 export default {
   name: 'Dashboard',
   components: {
-    Disclosure,
-    DisclosureButton,
-    DisclosurePanel,
-    ChevronUpIcon, PencilSquareIcon, TrashIcon
+    Disclosure, DisclosureButton, DisclosurePanel, TransitionRoot, TransitionChild, Dialog, DialogPanel, DialogTitle, ChevronUpIcon, PencilSquareIcon, TrashIcon
+  },
+  data() {
+    return {
+      isOpen: ''
+    }
   },
   computed: {
     ...mapState(useMamamStore, ['data'])
   },
   methods: {
-    ...mapActions(useMamamStore, ['fetchData', 'deleteMenu'])
+    ...mapActions(useMamamStore, ['fetchData', 'deleteMenu']),
+    closeModal() {
+      this.isOpen = ref(false)
+    },
+    openModal() {
+      this.isOpen = ref(true)
+    }
   },
   created() {
     this.fetchData()
@@ -52,7 +63,7 @@ export default {
                 <div class="flex justify-between mt-4">
                   <p class="font-bold">Rp. {{ menu.price.toLocaleString() }}</p>
                   <div class="flex gap-2">
-                    <a href="" data-modal-toggle="authentication-modal">
+                    <a href="" data-modal-toggle="authentication-modal" @click.prevent="openModal(el.id)">
                       <PencilSquareIcon class="h-5 w-5 text-blue-600" data-modal-toggle="authentication-modal" />
                     </a>
                     <a href="">
@@ -67,4 +78,63 @@ export default {
       </Disclosure>
     </div>
   </div>
+
+  <!-- <button type="button" @click="openModal"
+    class="rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+    Open dialog
+  </button> -->
+
+  <TransitionRoot appear :show="isOpen" as="template">
+    <Dialog as="div" @close="closeModal" class="relative z-10">
+      <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0" enter-to="opacity-100"
+        leave="duration-200 ease-in" leave-from="opacity-100" leave-to="opacity-0">
+        <div class="fixed inset-0 bg-black bg-opacity-25" />
+      </TransitionChild>
+
+      <div class="fixed inset-0 overflow-y-auto">
+        <div class="flex min-h-full items-center justify-center p-4 text-center">
+          <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0 scale-95"
+            enter-to="opacity-100 scale-100" leave="duration-200 ease-in" leave-from="opacity-100 scale-100"
+            leave-to="opacity-0 scale-95">
+            <DialogPanel
+              class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+              <form class="space-y-6" action="#">
+                <h5 class="text-xl font-medium text-gray-900 dark:text-white">Edit Menu</h5>
+                <div>
+                  <label for="menu-name"
+                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
+                  <input type="text" name="menu-name" id="menu-name"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                    required>
+                </div>
+                <div>
+                  <label for="menu-description"
+                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
+                  <input type="text" name="menu-description" id="menu-description"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                    required>
+                </div>
+                <div>
+                  <label for="price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Price</label>
+                  <input type="text" name="price" id="price"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                    required>
+                </div>
+                <div>
+                  <label for="manu-imgUrl" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Image
+                    Url</label>
+                  <input type="text" name="menu-imgUrl" id="menu-imgUrl"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                    required>
+                </div>
+                <button type="submit"
+                  class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  @click.prevent="closeModal">Submit</button>
+              </form>
+            </DialogPanel>
+          </TransitionChild>
+        </div>
+      </div>
+    </Dialog>
+  </TransitionRoot>
 </template>
