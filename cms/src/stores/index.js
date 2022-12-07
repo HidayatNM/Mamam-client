@@ -7,6 +7,7 @@ export const useMamamStore = defineStore("Mamam", {
     return {
       isLogin: false,
       data: [],
+      dataEditMenu: {},
     };
   },
   actions: {
@@ -92,6 +93,44 @@ export const useMamamStore = defineStore("Mamam", {
             access_token: localStorage.getItem("access_token"),
           },
         });
+        this.router.push("/dashboard");
+      } catch (err) {
+        console.log(err);
+      }
+    },
+
+    async getEditMenu(id) {
+      try {
+        const { data } = await axios({
+          url: `${baseUrl}/menus/${id}`,
+          method: "GET",
+          headers: {
+            access_token: localStorage.getItem("access_token"),
+          },
+        });
+        this.dataEditMenu = data.menu;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+
+    async editMenu(menu) {
+      const { id, name, description, price, imgUrl } = menu;
+      try {
+        const { data } = await axios({
+          url: `${baseUrl}/menus/${id}`,
+          method: "PUT",
+          headers: {
+            access_token: localStorage.getItem("access_token"),
+          },
+          data: {
+            name,
+            description,
+            price,
+            imgUrl,
+          },
+        });
+        this.fetchData();
         this.router.push("/dashboard");
       } catch (err) {
         console.log(err);
