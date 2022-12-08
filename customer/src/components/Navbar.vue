@@ -6,8 +6,8 @@ export default {
 
 <template>
 
-  <nav class="bg-gray-500 border-gray-200 px-2 sm:px-4 py-2.5 border-b-black">
-    <div class="container">
+  <nav class="bg-white border-gray-200 px-2 sm:px-4 py-2.5 border-b-black">
+    <div class="">
       <router-link to="/">
         <h1 class="text-2xl font-bold">MAMAM</h1>
       </router-link>

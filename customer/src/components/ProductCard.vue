@@ -14,17 +14,18 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(useCustomerStore, ['totalPay', 'totalQty']),
+    ...mapWritableState(useCustomerStore, ['totalPay', 'totalQty', 'menuTrax']),
   },
   methods: {
     counterPlus(val) {
       this.qty += 1
-      this.totalPay += val
+      this.totalPay += val.price
       this.totalQty += 1
+      this.menuTrax.push(val)
     },
     counterMinus(val) {
       this.qty -= 1
-      this.totalPay -= val
+      this.totalPay -= val.price
       this.totalQty -= 1
     },
   }
@@ -49,11 +50,11 @@ export default {
             <p>Rp. {{ menu.price }}</p>
           </div>
           <div class="flex gap-2">
-            <button @click="counterMinus(menu.price)" :disabled="!this.qty">
+            <button @click.prevent="counterMinus(menu)" :disabled="!this.qty">
               <MinusCircleIcon class="h-5 w-5" />
             </button>
             <div>{{ this.qty }}</div>
-            <button @click="counterPlus(menu.price)">
+            <button @click.prevent="counterPlus(menu)">
               <PlusCircleIcon class="h-5 w-5" />
             </button>
           </div>
