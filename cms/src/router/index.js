@@ -3,6 +3,8 @@ import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
 import RegisterView from "../views/RegisterView.vue";
 import DashboardView from "../views/DashboardView.vue";
+import MenusView from "../views/MenusView.vue";
+import NewMenu from "../components/NewMenu.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,9 +15,19 @@ const router = createRouter({
       component: HomeView,
     },
     {
+      path: "/:merchant/menus",
+      name: "Merchant",
+      component: MenusView,
+    },
+    {
       path: "/dashboard",
       name: "Dashboard",
       component: DashboardView,
+    },
+    {
+      path: "/form",
+      name: "NewMenu",
+      component: NewMenu,
     },
     {
       path: "/login",

@@ -1,13 +1,16 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 
-const baseUrl = "https://mamam-production.up.railway.app";
+const baseUrl = "http://localhost:3000";
 export const useMamamStore = defineStore("Mamam", {
   state: () => {
     return {
       isLogin: false,
+      listMerchant: [],
+      categoryMenu: [],
       data: [],
       dataEditMenu: {},
+      flags: "add",
     };
   },
   actions: {
@@ -15,7 +18,7 @@ export const useMamamStore = defineStore("Mamam", {
       const { email, password } = input;
       try {
         const { data } = await axios({
-          url: `${baseUrl}/login`,
+          url: `${baseUrl}/merchants/login`,
           method: "POST",
           data: {
             email,
@@ -50,7 +53,7 @@ export const useMamamStore = defineStore("Mamam", {
       } = input;
       try {
         const { data } = await axios({
-          url: `${baseUrl}/register`,
+          url: `${baseUrl}/merchants/register`,
           method: "POST",
           data: {
             name,
@@ -68,6 +71,31 @@ export const useMamamStore = defineStore("Mamam", {
         console.log(err);
       }
     },
+
+    async fetchListMerchant() {
+      try {
+        const { data } = await axios({
+          url: `${baseUrl}/merchants`,
+          method: "GET",
+        });
+
+        this.listMerchant = data.listMerchant;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+
+    async fetchMerchantMenu(id) {
+      try {
+        const { data } = await axios({
+          url: `${baseUrl}/merchants/${id}`,
+          method: "GET",
+        });
+        this.categoryMenu = data.CategoryMenu;
+      } catch (err) {
+        console.log(err);
+      }
+    },
     async fetchData() {
       try {
         const { data } = await axios({
@@ -78,6 +106,29 @@ export const useMamamStore = defineStore("Mamam", {
           },
         });
         this.data = data.data;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+
+    async addMenus(input) {
+      const { name, description, price, imgUrl, categoryid } = input;
+      console.log(input);
+      try {
+        await axios({
+          url: `${baseUrl}/menus`,
+          method: "POST",
+          headers: {
+            access_token: localStorage.getItem("access_token"),
+          },
+          data: {
+            name: input.name,
+            description: input.description,
+            price: input.price,
+            imgUrl: input.imgUrl,
+            categoryid: input.categoryId,
+          },
+        });
       } catch (err) {
         console.log(err);
       }
